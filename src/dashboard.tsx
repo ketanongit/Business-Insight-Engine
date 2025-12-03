@@ -1,6 +1,6 @@
-import { html } from "hono/html";
+import { html, raw } from "hono/html";
 
-export const Dashboard = (insights: any[]) => html`
+export const Dashboard = (insights: any[], trends: any[]) => html`
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,15 +50,18 @@ export const Dashboard = (insights: any[]) => html`
     </div>
 
     <script>
+        const trendsData = ${raw(JSON.stringify(trends))};
+        console.log("Client Trends Data:", trendsData);
+
         // Mock Chart Data (In a real app, pass this from backend)
         const ctx = document.getElementById('trafficChart').getContext('2d');
         new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
+                labels: ${raw(JSON.stringify(trends.map(t => t.label)))},
                 datasets: [{
                     label: 'Page Views',
-                    data: [120, 190, 300, 500, 200, 300],
+                    data: ${raw(JSON.stringify(trends.map(t => t.value)))},
                     borderColor: 'rgb(59, 130, 246)',
                     tension: 0.1
                 }]
@@ -78,7 +81,7 @@ export const Dashboard = (insights: any[]) => html`
             doc.setFontSize(12);
             doc.text("Generated on: " + new Date().toLocaleDateString(), 20, 30);
 
-            const insights = ${JSON.stringify(insights)};
+            const insights = ${raw(JSON.stringify(insights))};
             
             const tableData = insights.map(i => [
                 i.priority,

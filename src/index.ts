@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { getAnalyticsData, detectAnomalies } from "./analytics";
+import { getAnalyticsData, detectAnomalies, getTrafficTrends } from "./analytics";
 import { generateInsights } from "./insights";
 import { Dashboard } from "./dashboard";
 
@@ -11,7 +11,8 @@ app.get("/insights", async (c) => {
     const data = await getAnalyticsData();
     const anomalies = detectAnomalies(data);
     const insights = await generateInsights(anomalies);
-    return c.html(Dashboard(insights));
+    const trends = await getTrafficTrends();
+    return c.html(Dashboard(insights, trends));
 });
 
 app.get("/api/insights/business", async (c) => {

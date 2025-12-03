@@ -103,3 +103,22 @@ export function detectAnomalies(data: any) {
 
     return anomalies;
 }
+
+
+export async function getTrafficTrends() {
+    const now = new Date();
+    const twentyFourHoursAgo = subHours(now, 24);
+
+    const trends = await db
+        .select({
+            hour: sql<string>`to_char(${pageviews.timestamp}, 'HH24:00')`,
+            count: sql<number>`sum(${pageviews.count})`,
+        })
+        .from(pageviews)
+        .where(gte(pageviews.timestamp, twentyFourHoursAgo))
+        .groupBy(sql`to_char(${pageviews.timestamp}, 'HH24:00')`)
+        .orderBy(sql`to_char(${pageviews.timestamp}, 'HH24:00')`);
+
+    console.log("Trends Data:", trends);
+    return trends.map(t => ({ label: t.hour, value: Number(t.count) }));
+}
