@@ -1,16 +1,24 @@
 import { Hono } from "hono";
 import { getAnalyticsData, detectAnomalies } from "./analytics";
 import { generateInsights } from "./insights";
+import { Dashboard } from "./dashboard";
 
 const app = new Hono();
 
 app.get("/", (c) => c.text("Business Insight Engine Active"));
 
+app.get("/insights", async (c) => {
+    const data = await getAnalyticsData();
+    const anomalies = detectAnomalies(data);
+    const insights = await generateInsights(anomalies);
+    return c.html(Dashboard(insights));
+});
+
 app.get("/api/insights/business", async (c) => {
     try {
         const data = await getAnalyticsData();
         const anomalies = detectAnomalies(data);
-        const insights = generateInsights(anomalies);
+        const insights = await generateInsights(anomalies);
         return c.json({ insights });
     } catch (error) {
         console.error(error);

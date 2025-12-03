@@ -1,5 +1,8 @@
-export function generateInsights(anomalies: any[]) {
-    return anomalies.map((anomaly) => {
+import { db } from "./db";
+import { businessInsights } from "./db/schema";
+
+export async function generateInsights(anomalies: any[]) {
+    const insights = anomalies.map((anomaly) => {
         let insight = {
             type: anomaly.type,
             metric: anomaly.metric,
@@ -34,4 +37,17 @@ export function generateInsights(anomalies: any[]) {
         const priorities = { Critical: 3, High: 2, Medium: 1, Low: 0 };
         return (priorities[b.priority as keyof typeof priorities] || 0) - (priorities[a.priority as keyof typeof priorities] || 0);
     }).slice(0, 5);
+
+    // Persist to DB
+    if (insights.length > 0) {
+        await db.insert(businessInsights).values(insights.map(i => ({
+            metricType: i.metric,
+            page: i.context.page || "N/A",
+            insightText: i.businessInsight,
+            suggestedAction: i.suggestedAction,
+            impactScore: i.priority,
+        })));
+    }
+
+    return insights;
 }

@@ -24,3 +24,13 @@ export const performance = pgTable("performance_hourly", {
     avgLoadTime: doublePrecision("avg_load_time").notNull(),
     region: text("region"),
 });
+
+export const businessInsights = pgTable("business_insights", {
+    id: serial("id").primaryKey(),
+    metricType: text("metric_type").notNull(),
+    page: text("page").notNull(),
+    insightText: text("insight_text").notNull(),
+    suggestedAction: text("suggested_action").notNull(),
+    impactScore: text("impact_score").notNull(), // "Critical", "High", "Medium", "Low"
+    timestamp: timestamp("timestamp").defaultNow().notNull(),
+});
