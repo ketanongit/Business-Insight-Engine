@@ -119,6 +119,5 @@ export async function getTrafficTrends() {
         .groupBy(sql`to_char(${pageviews.timestamp}, 'HH24:00')`)
         .orderBy(sql`to_char(${pageviews.timestamp}, 'HH24:00')`);
 
-    console.log("Trends Data:", trends);
     return trends.map(t => ({ label: t.hour, value: Number(t.count) }));
 }

@@ -12,15 +12,20 @@ export const Dashboard = (insights: any[], trends: any[]) => html`
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
 </head>
-<body class="bg-gray-100 p-8">
-    <div class="max-w-6xl mx-auto">
-        <div class="flex justify-between items-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">Business Insight Dashboard</h1>
-            <button onclick="generatePDF()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
-                Download Daily Report
+<body class="bg-gray-50 font-sans antialiased">
+    <div class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm px-4 md:px-8 py-4 mb-8 transition-all duration-300">
+        <div class="max-w-8xl mx-auto flex justify-between items-center">
+            <h1 class="text-xl md:text-3xl font-bold text-gray-900 tracking-tight">
+                Business Insight <span class="text-blue-600">Dashboard</span>
+            </h1>
+            <button onclick="generatePDF()" class="group bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 text-xs md:text-base px-3 py-2 md:px-6 md:py-2.5 flex items-center gap-2">
+                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                <span>Download Report</span>
             </button>
         </div>
+    </div>
 
+    <div class="max-w-8xl mx-auto px-8 pb-8">
         <!-- Top Insights -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div class="bg-white p-6 rounded-lg shadow-md">
@@ -51,7 +56,6 @@ export const Dashboard = (insights: any[], trends: any[]) => html`
 
     <script>
         const trendsData = ${raw(JSON.stringify(trends))};
-        console.log("Client Trends Data:", trendsData);
 
         // Mock Chart Data (In a real app, pass this from backend)
         const ctx = document.getElementById('trafficChart').getContext('2d');
