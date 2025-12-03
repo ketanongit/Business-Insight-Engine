@@ -55,7 +55,7 @@ export const Dashboard = (insights: any[], trends: any[]) => html`
 
         // Mock Chart Data (In a real app, pass this from backend)
         const ctx = document.getElementById('trafficChart').getContext('2d');
-        new Chart(ctx, {
+        const myChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: ${raw(JSON.stringify(trends.map(t => t.label)))},
@@ -97,6 +97,11 @@ export const Dashboard = (insights: any[], trends: any[]) => html`
                 theme: 'grid',
                 headStyles: { fillColor: [41, 128, 185] },
             });
+
+            // Add Chart
+            const chartImg = myChart.toBase64Image();
+            const finalY = doc.lastAutoTable.finalY || 40;
+            doc.addImage(chartImg, 'PNG', 15, finalY + 20, 180, 100);
 
             doc.save("daily-insights.pdf");
         }
